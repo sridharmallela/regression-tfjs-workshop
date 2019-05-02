@@ -53,105 +53,105 @@ const optimizer = tf.train.sgd(learningRate);
 
 // Is passed in an array of X values and returns an array of predicted Y values based on the current values of a, b and c weights
 function predict(x) {
-  return a
-    .mul(x.square())
-    .add(b.mul(x))
-    .add(c);
+    return a
+        .mul(x.square())
+        .add(b.mul(x))
+        .add(c);
 }
 
 // When passed in the array of predictedYs calculates the mean square loss compared to the actualYs
 function loss(predictedYs, actualYs) {
-  // Mean Squared Error
-  let x = predictedYs
-    .sub(actualYs)
-    .square()
-    .mean();
-  LOSS = x.dataSync()[0];
-  return x;
+    // Mean Squared Error
+    let x = predictedYs
+        .sub(actualYs)
+        .square()
+        .mean();
+    LOSS = x.dataSync()[0];
+    return x;
 }
 
 // Pass in the actualXs and the actualYs (from the mouse clicks)
 // use the actualXs to calculate the prdictedYs
 // pass predictedYs and actualYs to the optimiser and try to minimise that value
 async function train(numIterations = 1) {
-  if (Xs.length) {
-    for (CURRENT_EPOCH = 0; CURRENT_EPOCH < numIterations; CURRENT_EPOCH++) {
-      tf.tidy(() => {
-        const actualXs = tf.tensor(Xs, [Xs.length, 1]);
-        const actualYs = tf.tensor(Ys, [Ys.length, 1]);
+    if (Xs.length) {
+        for (CURRENT_EPOCH = 0; CURRENT_EPOCH < numIterations; CURRENT_EPOCH++) {
+            tf.tidy(() => {
+                const actualXs = tf.tensor(Xs, [Xs.length, 1]);
+                const actualYs = tf.tensor(Ys, [Ys.length, 1]);
 
-        optimizer.minimize(() => {
-          let predictedYs = predict(actualXs);
-          return loss(predictedYs, actualYs);
-        });
+                optimizer.minimize(() => {
+                    let predictedYs = predict(actualXs);
+                    return loss(predictedYs, actualYs);
+                });
 
-        A = a.dataSync()[0];
-        B = b.dataSync()[0];
-        C = c.dataSync()[0];
-        // console.log(A, B, C);
-      });
-      await tf.nextFrame();
+                A = a.dataSync()[0];
+                B = b.dataSync()[0];
+                C = c.dataSync()[0];
+                // console.log(A, B, C);
+            });
+            await tf.nextFrame();
+        }
     }
-  }
 }
 
 /*********************** TENSORFLOW END ***********************************/
 
 function mouseClicked() {
-  console.log("Clicked", `${mouseX}, ${mouseY}`);
-  let x = normX(mouseX);
-  let y = normY(mouseY);
-  Xs.push(x);
-  Ys.push(y);
-  // Everytime we click a mouse we run for this many epochs
-  train(MAX_EPOCHS);
+    console.log("Clicked", `${mouseX}, ${mouseY}`);
+    let x = normX(mouseX);
+    let y = normY(mouseY);
+    Xs.push(x);
+    Ys.push(y);
+    // Everytime we click a mouse we run for this many epochs
+    train(MAX_EPOCHS);
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+    createCanvas(windowWidth, windowHeight);
 }
 
 function draw_points() {
-  noStroke();
-  fill(51);
-  for (let i = 0; i < Xs.length; i++) {
-    let x = denormX(Xs[i]);
-    let y = denormY(Ys[i]);
-    ellipse(x, y, 10);
-  }
-  noFill();
+    noStroke();
+    fill(51);
+    for (let i = 0; i < Xs.length; i++) {
+        let x = denormX(Xs[i]);
+        let y = denormY(Ys[i]);
+        ellipse(x, y, 10);
+    }
+    noFill();
 }
 
 function draw_curve() {
-  for (let x = 0; x < windowWidth; x += 10) {
-    const y = getY(normX(x));
-    fill(51);
-    ellipse(x, denormY(y), 5);
-  }
+    for (let x = 0; x < windowWidth; x += 10) {
+        const y = getY(normX(x));
+        fill(51);
+        ellipse(x, denormY(y), 5);
+    }
 }
 
 function draw_loss() {
-  noStroke();
-  fill(0);
-  textSize(20);
-  textFont("monospace");
-  text(LOSS.toFixed(5), 15, windowHeight - 20);
-  noFill(); // This resets our fill color
+    noStroke();
+    fill(0);
+    textSize(20);
+    textFont("monospace");
+    text(LOSS.toFixed(5), 15, windowHeight - 20);
+    noFill(); // This resets our fill color
 }
 
 function draw_iteration() {
-  noStroke();
-  fill(0);
-  textSize(20);
-  textFont("monospace");
-  text(CURRENT_EPOCH, windowWidth - 40, windowHeight - 20);
-  noFill();
+    noStroke();
+    fill(0);
+    textSize(20);
+    textFont("monospace");
+    text(CURRENT_EPOCH, windowWidth - 40, windowHeight - 20);
+    noFill();
 }
 
 function draw() {
-  background(255);
-  draw_points();
-  draw_loss();
-  draw_curve();
-  draw_iteration();
+    background(255);
+    draw_points();
+    draw_loss();
+    draw_curve();
+    draw_iteration();
 }

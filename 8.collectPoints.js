@@ -18,17 +18,17 @@ const denormX = x => denorm(x, windowWidth);
 const denormY = x => denorm(x, windowHeight);
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+    createCanvas(windowWidth, windowHeight);
 }
 
 /*
 This function is called every time a mouse is clicked.
 */
 function mouseClicked() {
-  console.log("Clicked", `${mouseX}, ${mouseY}`);
-  const x = normX(mouseX);
-  const y = normY(mouseY);
-  Xs.push(x);
-  Ys.push(y);
-  console.log([Xs, Ys]);
+    console.log("Clicked", `${mouseX}, ${mouseY}`);
+    const x = normX(mouseX);
+    const y = normY(mouseY);
+    Xs.push(x);
+    Ys.push(y);
+    console.log([Xs, Ys]);
 }

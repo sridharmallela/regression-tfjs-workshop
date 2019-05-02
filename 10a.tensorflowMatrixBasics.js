@@ -93,19 +93,19 @@ a.div(b).print();
 
 // QUIZ - Take 2 from every value in the 3d array you created before
 {
-  var a = tf.tensor3d([4, 5, 6], [3, 1, 1]);
-  var b = tf.tensor3d([2, 2, 2], [3, 1, 1]);
-  a.sub(b).print();
+    var a = tf.tensor3d([4, 5, 6], [3, 1, 1]);
+    var b = tf.tensor3d([2, 2, 2], [3, 1, 1]);
+    a.sub(b).print();
 }
 
 {
-  var a = tf.tensor3d([4, 5, 6], [3, 1, 1]);
-  a.sub(tf.tensor(2)).print();
+    var a = tf.tensor3d([4, 5, 6], [3, 1, 1]);
+    a.sub(tf.tensor(2)).print();
 }
 
 {
-  var a = tf.tensor3d([4, 5, 6], [3, 1, 1]);
-  a.sub(2).print();
+    var a = tf.tensor3d([4, 5, 6], [3, 1, 1]);
+    a.sub(2).print();
 }
 
 //===========================================================//
@@ -135,14 +135,14 @@ a.dot(b).print();
             4
 */
 {
-  var a = tf.tensor([4, 5, 6]);
-  console.log(a.rank);
-  console.log(a.shape);
-  // var b = tf.tensor([[2], [3], [4]]);
-  var b = tf.tensor([2, 3, 4], [3, 1]);
-  console.log(b.rank);
-  console.log(b.shape);
-  b.print();
-  a.mul(b).print();
-  a.dot(b).print();
+    var a = tf.tensor([4, 5, 6]);
+    console.log(a.rank);
+    console.log(a.shape);
+    // var b = tf.tensor([[2], [3], [4]]);
+    var b = tf.tensor([2, 3, 4], [3, 1]);
+    console.log(b.rank);
+    console.log(b.shape);
+    b.print();
+    a.mul(b).print();
+    a.dot(b).print();
 }

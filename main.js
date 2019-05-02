@@ -1,3 +1,5 @@
+// copied 13
+
 /**
  * The equation for a polynomial (curved line) is this
  *
@@ -17,6 +19,8 @@ let CURRENT_EPOCH = 0;
 // Play arround with these numbers to see what happens
 let A = -0.4;
 // TODO: Maybe we need to store another coefficient here?
+// SRIDHAR i added
+let B = 1;
 let C = 100;
 
 // This will store mouse x,y points that have been scaled from 0->1
@@ -26,7 +30,10 @@ let Ys = [];
 const MAX_EPOCHS = 300;
 
 // Calculate Y from X
-const getY = x => A * x + C;
+// TODO: Wantedly missed
+// SRIDHAR i added
+// Give points to the guy who did Math.pow better than two multiplications
+const getY = x => (A * x * x) + (B * x) + C;
 
 // This scales a value from 0 to max to 0 to 1
 const norm = (x, max) => map(x, 0, max, 0, 1);
@@ -43,6 +50,8 @@ const denormY = x => denorm(x, windowHeight);
 // Create variables to store the weights of `A` and `C`
 const a = tf.variable(tf.scalar(Math.random()));
 //TODO: Maybe another tensorfor variable here?
+// SRIDHAR i added
+const b = tf.variable(tf.scalar(Math.random()));
 const c = tf.variable(tf.scalar(Math.random()));
 
 // Setup the optimiser
@@ -54,7 +63,10 @@ const optimizer = tf.train.sgd(learningRate);
 // Is passed in an array of X values and returns an array of predicted Y values based on the current values of m and c weights
 function predict(x) {
     // TODO: This might need changing to be a polynomial equation, HINT - x.square() squares x
-    return a.mul(x).add(c);
+    // return a.mul(x).add(c);
+    // SRIDHAR i added
+    //  A*X^2 + B*X + C
+    return a.mul(x.square()).add(b.mul(x)).add(c);
 }
 
 // When passed in the array of predictedYs calculates the mean square loss compared to the actualYs
@@ -85,6 +97,8 @@ async function train(numIterations = 1) {
 
                 A = a.dataSync()[0];
                 // TODO: Maybe we need to exract the value from another tensor flow variable here?
+                // SRIDHAR i added
+                B = b.dataSync()[0];
                 C = c.dataSync()[0];
                 // console.log(A, B, C);
             });

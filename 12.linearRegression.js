@@ -51,107 +51,112 @@ const optimizer = tf.train.sgd(learningRate);
 
 // Is passed in an array of X values and returns an array of predicted Y values based on the current values of m and c weights
 function predict(x) {
-  // y = m * x + b
-  return a.mul(x).add(c);
+    // y = m * x + b
+    return a.mul(x).add(c);
 }
 
 // When passed in the array of predictedYs calculates the mean square loss compared to the actualYs
 function loss(predictedYs, actualYs) {
-  // Mean Squared Error
-  let x = predictedYs
-    .sub(actualYs)
-    .square()
-    .mean();
-  LOSS = x.dataSync()[0];
-  return x;
+    // Mean Squared Error
+    let x = predictedYs
+        .sub(actualYs)
+        .square()
+        .mean();
+    LOSS = x.dataSync()[0];
+    return x;
 }
 
 // Pass in the actualXs and the actualYs (from the mouse clicks)
 // use the actualXs to calculate the prdictedYs
 // pass predictedYs and actualYs to the optimiser and try to minimise that value
 async function train(numIterations = 1) {
-  if (Xs.length) {
-    for (CURRENT_EPOCH = 0; CURRENT_EPOCH < numIterations; CURRENT_EPOCH++) {
-      tf.tidy(() => {
-        const actualXs = tf.tensor(Xs, [Xs.length, 1]);
-        const actualYs = tf.tensor(Ys, [Ys.length, 1]);
+    if (Xs.length) {
+        for (CURRENT_EPOCH = 0; CURRENT_EPOCH < numIterations; CURRENT_EPOCH++) {
+            // tfjs is needs to know to remove the variables in memory
+            // GPU will cluter, as js doesnt do GC (means we never cleanup variables)
+            // .tidy is one way of telling tensor clearing memory
+            // you can call dispose method to do the same
+            tf.tidy(() => {
+                const actualXs = tf.tensor(Xs, [Xs.length, 1]);
+                const actualYs = tf.tensor(Ys, [Ys.length, 1]);
 
-        optimizer.minimize(() => {
-          let predictedYs = predict(actualXs);
-          return loss(predictedYs, actualYs);
-        });
+                optimizer.minimize(() => {
+                    let predictedYs = predict(actualXs);
+                    return loss(predictedYs, actualYs);
+                });
 
-        A = a.dataSync()[0];
-        C = c.dataSync()[0];
-        // console.log(A, C);
-      });
-      await tf.nextFrame();
+                A = a.dataSync()[0];
+                C = c.dataSync()[0];
+                // console.log(A, C);
+            });
+            // tell tensor to go draw something screen
+            await tf.nextFrame();
+        }
     }
-  }
 }
 
 /*********************** TENSORFLOW END ***********************************/
 
 function mouseClicked() {
-  console.log("Clicked", `${mouseX}, ${mouseY}`);
-  let x = normX(mouseX);
-  let y = normY(mouseY);
-  Xs.push(x);
-  Ys.push(y);
-  // Everytime we click a mouse we run for this many epochs
-  train(MAX_EPOCHS);
+    console.log("Clicked", `${mouseX}, ${mouseY}`);
+    let x = normX(mouseX);
+    let y = normY(mouseY);
+    Xs.push(x);
+    Ys.push(y);
+    // Everytime we click a mouse we run for this many epochs
+    train(MAX_EPOCHS);
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+    createCanvas(windowWidth, windowHeight);
 }
 
 function draw_points() {
-  noStroke();
-  fill(51);
-  for (let i = 0; i < Xs.length; i++) {
-    let x = denormX(Xs[i]);
-    let y = denormY(Ys[i]);
-    ellipse(x, y, 10);
-  }
-  noFill();
+    noStroke();
+    fill(51);
+    for (let i = 0; i < Xs.length; i++) {
+        let x = denormX(Xs[i]);
+        let y = denormY(Ys[i]);
+        ellipse(x, y, 10);
+    }
+    noFill();
 }
 
 /**
  * !NOTE! We now have to use denorm functions because the variables A and C are being calcualted for normalised points
  */
 function draw_line() {
-  stroke(51);
-  const x1 = denormX(0); // Start on the furthest left
-  const y1 = denormY(getY(0)); // Get the y value for this
-  const x2 = denormX(1); // End on the furthest right
-  const y2 = denormY(getY(1)); // Get the y value for this
-  line(x1, y1, x2, y2);
-  noStroke();
+    stroke(51);
+    const x1 = denormX(0); // Start on the furthest left
+    const y1 = denormY(getY(0)); // Get the y value for this
+    const x2 = denormX(1); // End on the furthest right
+    const y2 = denormY(getY(1)); // Get the y value for this
+    line(x1, y1, x2, y2);
+    noStroke();
 }
 
 function draw_loss() {
-  noStroke();
-  fill(0);
-  textSize(20);
-  textFont("monospace");
-  text(LOSS.toFixed(5), 15, windowHeight - 20);
-  noFill(); // This resets our fill color
+    noStroke();
+    fill(0);
+    textSize(20);
+    textFont("monospace");
+    text(LOSS.toFixed(5), 15, windowHeight - 20);
+    noFill(); // This resets our fill color
 }
 
 function draw_iteration() {
-  noStroke();
-  fill(0);
-  textSize(20);
-  textFont("monospace");
-  text(CURRENT_EPOCH, windowWidth - 40, windowHeight - 20);
-  noFill();
+    noStroke();
+    fill(0);
+    textSize(20);
+    textFont("monospace");
+    text(CURRENT_EPOCH, windowWidth - 40, windowHeight - 20);
+    noFill();
 }
 
 function draw() {
-  background(255);
-  draw_points();
-  draw_loss();
-  draw_line();
-  draw_iteration();
+    background(255);
+    draw_points();
+    draw_loss();
+    draw_line();
+    draw_iteration();
 }

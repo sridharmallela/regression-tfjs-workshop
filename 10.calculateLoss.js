@@ -36,16 +36,17 @@ const denorm = (x, max) => map(x, 0, 1, 0, max);
 const denormX = x => denorm(x, windowWidth);
 const denormY = x => denorm(x, windowHeight);
 
+// Mouse Clicked
 function mouseClicked() {
-  console.log("Clicked", `${mouseX}, ${mouseY}`);
-  // Get the x and y values scaled from 0 -> 1
-  let x = normX(mouseX);
-  let y = normY(mouseY);
-  Xs.push(x);
-  Ys.push(y);
+    console.log("Clicked", `${mouseX}, ${mouseY}`);
+    // Get the x and y values scaled from 0 -> 1
+    let x = normX(mouseX);
+    let y = normY(mouseY);
+    Xs.push(x);
+    Ys.push(y);
 
-  // Now calcualte the loss across all points
-  loss();
+    // Now calcualte the loss across all points
+    loss();
 }
 
 /**
@@ -54,61 +55,63 @@ function mouseClicked() {
  * The closer the mouse clicks are to the line the lower the value of the loss!
  */
 function loss() {
-  let squaredDiff = 0;
+    let squaredDiff = 0;
 
-  // For each point the user clicked
-  for (let i = 0; i < Xs.length; i++) {
-    // Get the normalised value of x for the click
-    let x = Xs[i];
-    // Get the nromalised value of y for the click
-    let y = Ys[i];
-    // Then use the equation of the line to get a value for y of the line
-    let predictedY = normY(getY(denormX(x)));
+    // For each point the user clicked
+    for (let i = 0; i < Xs.length; i++) {
+        // Get the normalised value of x for the click
+        let x = Xs[i];
+        // Get the nromalised value of y for the click
+        let y = Ys[i];
+        // Then use the equation of the line to get a value for y of the line
+        let predictedY = normY(getY(denormX(x)));
 
-    // For each mouse click, the x of the mouse click and the x of the line is going to be the same. What is different is the y of the mouse click and the y of the line. We figure out the squared distance between those
-    squaredDiff += Math.pow(predictedY - y, 2);
-  }
-  let mean = (LOSS = squaredDiff / Xs.length);
-  console.log(LOSS);
+        // For each mouse click, the x of the mouse click and the x of the line is going to be the same. What is different is the y of the mouse click and the y of the line. We figure out the squared distance between those
+        squaredDiff += Math.pow(predictedY - y, 2);
+    }
+    let mean = (LOSS = squaredDiff / Xs.length);
+    console.log(LOSS);
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+    createCanvas(windowWidth, windowHeight);
 }
 
+// drawing circles
 function draw_points() {
-  noStroke();
-  fill(51);
-  for (let i = 0; i < Xs.length; i++) {
-    let x = denormX(Xs[i]);
-    let y = denormY(Ys[i]);
-    ellipse(x, y, 10);
-  }
-  noFill();
+    noStroke();
+    fill(51);
+    for (let i = 0; i < Xs.length; i++) {
+        let x = denormX(Xs[i]);
+        let y = denormY(Ys[i]);
+        ellipse(x, y, 10);
+    }
+    noFill();
 }
 
 function draw_line() {
-  stroke(51);
-  const x1 = 0; // Start on the furthest left
-  const y1 = getY(x1); // Get the y value for this
-  const x2 = windowWidth; // End on the furthest right
-  const y2 = getY(x2); // Get the y value for this
-  line(x1, y1, x2, y2);
-  noStroke();
+    stroke(51);
+    const x1 = 0; // Start on the furthest left
+    const y1 = getY(x1); // Get the y value for this
+    const x2 = windowWidth; // End on the furthest right
+    const y2 = getY(x2); // Get the y value for this
+    line(x1, y1, x2, y2);
+    noStroke();
 }
 
+// draeing the text
 function draw_loss() {
-  noStroke();
-  fill(0);
-  textSize(20);
-  textFont("monospace");
-  text(LOSS.toFixed(5), 15, windowHeight - 20);
-  noFill(); // This resets our fill color
+    noStroke();
+    fill(0);
+    textSize(20);
+    textFont("monospace");
+    text(LOSS.toFixed(5), 15, windowHeight - 20);
+    noFill(); // This resets our fill color
 }
 
 function draw() {
-  background(255); // This blanks the screen and shows it as white again
-  draw_line();
-  draw_points();
-  draw_loss();
+    background(255); // This blanks the screen and shows it as white again
+    draw_line();
+    draw_points();
+    draw_loss();
 }

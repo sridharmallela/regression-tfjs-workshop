@@ -27,10 +27,10 @@ const optimizer = tf.train.sgd(learningRate); // We create the optimiser, this i
 
 console.log(x.dataSync());
 optimizer.minimize(() => {
-  return ys
-    .mul(x)
-    .mean()
-    .square();
+    return ys
+        .mul(x)
+        .mean()
+        .square();
 });
 console.log(x.dataSync()); // You can see the second time it runs through the value of x should go down
 
@@ -38,28 +38,28 @@ console.log(x.dataSync()); // You can see the second time it runs through the va
 // normally however we run multiple epochs
 
 for (let i = 0; i < 1000; i++) {
-  optimizer.minimize(() => {
-    return ys
-      .mul(x)
-      .mean()
-      .square();
-  });
-  console.log(x.dataSync());
+    optimizer.minimize(() => {
+        return ys
+            .mul(x)
+            .mean()
+            .square();
+    });
+    console.log(x.dataSync());
 }
 
 // 6 And because tensors use your GPU, it doesn't handle memory the same way as javascript running on the CPU does. So we need to be careful we don't run out.
 // We either wrap code that is calculating using tensors in a tf.tidy or we can call dispose
 
 for (let i = 0; i < 200; i++) {
-  tf.tidy(() => {
-    optimizer.minimize(() => {
-      return ys
-        .mul(x)
-        .mean()
-        .abs();
+    tf.tidy(() => {
+        optimizer.minimize(() => {
+            return ys
+                .mul(x)
+                .mean()
+                .abs();
+        });
+        console.log(x.dataSync());
     });
-    console.log(x.dataSync());
-  });
 }
 
 /*

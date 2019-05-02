@@ -14,15 +14,15 @@ const C = 100;
 const getY = x => A * x + C;
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+    createCanvas(windowWidth, windowHeight);
 }
 
 function draw() {
-  const x1 = 0; // Start on the furthest left
-  const y1 = getY(x1); // Get the y value for this
-  const x2 = windowWidth; // End on the furthest right
-  const y2 = getY(x2); // Get the y value for this
-  stroke(51);
-  strokeWeight(10);
-  line(x1, y1, x2, y2);
+    const x1 = 0; // Start on the furthest left
+    const y1 = getY(x1); // Get the y value for this
+    const x2 = windowWidth; // End on the furthest right
+    const y2 = getY(x2); // Get the y value for this
+    stroke(51);
+    strokeWeight(10);
+    line(x1, y1, x2, y2);
 }
